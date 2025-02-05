@@ -1,26 +1,43 @@
-import SwiftUI
 
+
+
+
+import SwiftUI
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 // MARK: - Model
 struct Post: Codable, Identifiable {
     let id: Int
     var title: String
     var body: String
 }
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 
+
+
+
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 // MARK: - ViewModel
 class PostViewModel: ObservableObject {
     @Published var posts: [Post] = []
     @Published var errorMessage: String?
-
+    
     private let baseURL = "https://jsonplaceholder.typicode.com/posts"
-
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
+    
+    
+    
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
     // Fetch Posts (GET)
     func fetchPosts() {
         guard let url = URL(string: baseURL) else {
             errorMessage = "Invalid URL"
             return
         }
-
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
@@ -38,25 +55,31 @@ class PostViewModel: ObservableObject {
             }
         }.resume()
     }
-
+    //--------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------//
+    
+    
+    
+    //--------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------//
     // Create Post (POST)
     func createPost(title: String, body: String) {
         guard let url = URL(string: baseURL) else {
             errorMessage = "Invalid URL"
             return
         }
-
+        
         let post: [String: Any] = ["title": title, "body": body, "userId": 1]
         guard let requestData = try? JSONSerialization.data(withJSONObject: post) else {
             errorMessage = "Failed to encode post data"
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = requestData
-
+        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
@@ -74,25 +97,32 @@ class PostViewModel: ObservableObject {
             }
         }.resume()
     }
-
+    
+    //--------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------//
+    
+    
+    
+    //--------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------//
     // Update Post (PUT)
     func updatePost(postId: Int, title: String, body: String) {
         guard let url = URL(string: "\(baseURL)/\(postId)") else {
             errorMessage = "Invalid URL"
             return
         }
-
+        
         let updatedPost: [String: Any] = ["title": title, "body": body, "userId": 1]
         guard let requestData = try? JSONSerialization.data(withJSONObject: updatedPost) else {
             errorMessage = "Failed to encode post data"
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = requestData
-
+        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
@@ -114,17 +144,24 @@ class PostViewModel: ObservableObject {
             }
         }.resume()
     }
-
+    //--------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------//
+    
+    
+    
+    
+    //--------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------//
     // Delete Post (DELETE)
     func deletePost(postId: Int) {
         guard let url = URL(string: "\(baseURL)/\(postId)") else {
             errorMessage = "Invalid URL"
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
-
+        
         URLSession.shared.dataTask(with: request) { _, _, error in
             if let error = error {
                 DispatchQueue.main.async { self.errorMessage = error.localizedDescription }
@@ -134,7 +171,13 @@ class PostViewModel: ObservableObject {
         }.resume()
     }
 }
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 
+
+
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 // MARK: - View
 struct PostView: View {
     @StateObject var viewModel = PostViewModel()
@@ -186,7 +229,15 @@ struct PostView: View {
         }
     }
 }
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 
+
+
+
+
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 // MARK: - Add/Edit View
 struct AddEditPostView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -239,10 +290,20 @@ struct AddEditPostView: View {
         presentationMode.wrappedValue.dismiss()
     }
 }
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 
+
+
+
+
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 // MARK: - Preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         PostView()
     }
 }
+//------------------------------------------------------------------------------------//
+//-------------------------------------------------------------------------------------//
